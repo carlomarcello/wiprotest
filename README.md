@@ -21,7 +21,11 @@ password: 1234
 ## APIs
 
 ### Incluir produto 
-##### POST http://localhost:8080/api/v1/products
+##### POST /api/v1/products
+Exemplo da URL:
+```
+http://localhost:8080/api/v1/products
+```
 Exemplo do body:
 ```
 {
@@ -32,7 +36,11 @@ Exemplo do body:
 }
 ```
 ### Editar produto 
-##### PUT http://localhost:8080/api/v1/products/{productId}
+##### PUT /api/v1/products/{productId}
+Exemplo da URL:
+```
+http://localhost:8080/api/v1/products/2b5486fe-18c3-4d99-b989-d70cbc4b4629
+```
 Exemplo do body:
 ```
 {    
@@ -42,7 +50,11 @@ Exemplo do body:
 }
 ```
 ### Editar produto parcialmente (Patch) 
-##### PATCH http://localhost:8080/api/v1/products/{productId}
+##### PATCH /api/v1/products/{productId}
+Exemplo da URL:
+```
+http://localhost:8080/api/v1/products/2b5486fe-18c3-4d99-b989-d70cbc4b4629
+```
 Exemplo do body para inativar um produto:
 ```
 [
@@ -54,7 +66,7 @@ Exemplo do body para inativar um produto:
 ]
 ```
 ### Listar produtos (paginado) 
-##### GET http://localhost:8080/api/v1/products?active={active}
+##### GET /api/v1/products?active={active}
 Essa API permite listar os produtos usando paginação e opcionalmente filtrando apenas os produtos ativos ou inativos.
 
 O header da request deve conter as seguintes entradas para a paginação:
@@ -73,7 +85,7 @@ http://localhost:8080/api/v1/products?active=true
 http://localhost:8080/api/v1/products?active=false
 ```
 ### Obter produto por ID 
-##### GET http://localhost:8080/api/v1/products/{productId}
+##### GET /api/v1/products/{productId}
 Exemplo da URL:
 ```
 http://localhost:8080/api/v1/products/2b5486fe-18c3-4d99-b989-d70cbc4b4629
