@@ -15,6 +15,8 @@ public class AuthController {
 
     @GetMapping("/validateLogin")
     public UserDto validateLogin() {
-        return new UserDto("User successfully authenticated");
+        UserDto userDto = new UserDto();
+        userDto.setStatus("User successfully authenticated");
+        return userDto;
     }
 }

@@ -2,7 +2,7 @@ package com.cmarcello.wiprotest.services;
 
 import com.cmarcello.wiprotest.domain.Product;
 import com.cmarcello.wiprotest.repositories.ProductRepository;
-import com.cmarcello.wiprotest.web.controller.ResourceNotFoundException;
+import com.cmarcello.wiprotest.web.controller.exception.ResourceNotFoundException;
 import com.cmarcello.wiprotest.web.mapper.ProductMapper;
 import com.cmarcello.wiprotest.web.model.ProductDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,13 +57,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> findAll(PageRequest pageRequest) {
+        List<Product> products = productRepository.findAll(pageRequest).getContent();
+        return productMapper.productsToProductDtos(products);
+    }
+
+    @Override
     public List<ProductDto> findAll(Boolean active, PageRequest pageRequest) {
-        if (active == null) {
-            List<Product> products = productRepository.findAll(pageRequest).getContent();
-            return productMapper.productsToProductDtos(products);
-        } else {
-            return productMapper.productsToProductDtos(productRepository.findAllByActive(active, pageRequest));
-        }
+        return productMapper.productsToProductDtos(productRepository.findAllByActive(active, pageRequest));
     }
 
     private Product applyPatch(JsonPatch patch, Product product) throws JsonPatchException, JsonProcessingException {

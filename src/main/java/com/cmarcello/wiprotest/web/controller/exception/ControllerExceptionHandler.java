@@ -1,5 +1,6 @@
-package com.cmarcello.wiprotest.web.controller;
+package com.cmarcello.wiprotest.web.controller.exception;
 
+import com.cmarcello.wiprotest.web.controller.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

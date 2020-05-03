@@ -6,21 +6,28 @@ import com.cmarcello.wiprotest.web.model.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class ProductServiceImplTest {
@@ -39,6 +46,7 @@ class ProductServiceImplTest {
 
     Product product;
     ProductDto productDto;
+    PageRequest defaultPageRequest;
 
     @BeforeEach
     void setup() {
@@ -56,6 +64,8 @@ class ProductServiceImplTest {
                 .active(true)
                 .creationDate(OffsetDateTime.now())
                 .build();
+
+        defaultPageRequest = PageRequest.of(0, 5);
     }
 
     @Test
@@ -83,5 +93,34 @@ class ProductServiceImplTest {
         assertEquals(productDto.getDescription(), productDtoReturn.getDescription());
         assertEquals(productDto.getValue(), productDtoReturn.getValue());
         assertEquals(productDto.getActive(), productDtoReturn.getActive());
+    }
+
+    @Test
+    void testFindAllPageableWithoutFilter() {
+        List<Product> products = new ArrayList<>();
+        Page<Product> pagedResponse = new PageImpl<>(products);
+        when(productRepository.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+
+        productService.findAll(defaultPageRequest);
+
+        ArgumentCaptor<Pageable> pageableArgument = ArgumentCaptor.forClass(Pageable.class);
+        ArgumentCaptor<Boolean> booleanArgument = ArgumentCaptor.forClass(Boolean.class);
+
+        verify(productRepository, times(1)).findAll(pageableArgument.capture());
+        verify(productRepository, times(0)).findAllByActive(booleanArgument.capture(), pageableArgument.capture());
+    }
+
+    @Test
+    void testFindAllPageableByActive() {
+        List<Product> products = new ArrayList<>();
+        when(productRepository.findAllByActive(anyBoolean(), any(Pageable.class))).thenReturn(products);
+
+        productService.findAll(true, defaultPageRequest);
+
+        ArgumentCaptor<Pageable> pageableArgument = ArgumentCaptor.forClass(Pageable.class);
+        ArgumentCaptor<Boolean> booleanArgument = ArgumentCaptor.forClass(Boolean.class);
+
+        verify(productRepository, times(0)).findAll(pageableArgument.capture());
+        verify(productRepository, times(1)).findAllByActive(booleanArgument.capture(), pageableArgument.capture());
     }
 }

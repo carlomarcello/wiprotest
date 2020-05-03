@@ -12,5 +12,6 @@ public interface ProductService {
     ProductDto save(ProductDto productDto);
     ProductDto update(UUID productId, ProductDto productDto);
     ProductDto update(UUID productId, JsonPatch jsonPatch);
+    List<ProductDto> findAll(PageRequest pageRequest);
     List<ProductDto> findAll(Boolean active, PageRequest pageRequest);
 }

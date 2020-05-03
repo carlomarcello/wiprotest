@@ -43,7 +43,13 @@ public class ProductController {
             @RequestParam(required = false) Boolean active) {
 
         final PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
-        return new ResponseEntity<>(productService.findAll(active, pageRequest), HttpStatus.OK);
+
+        if (active == null) {
+            return new ResponseEntity<>(productService.findAll(pageRequest), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(productService.findAll(active, pageRequest), HttpStatus.OK);
+        }
+
     }
 
     @PatchMapping("/{productId}")
